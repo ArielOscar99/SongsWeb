@@ -16,12 +16,12 @@ const pool = new Pool({
   port: Number(process.env.DB_PORT) || 5432,
 });
 
-// Optional: log when a new client connects
+// Log when connected
 pool.on("connect", () => {
   console.log("Connected to Postgres DB");
 });
 
-// Optional: log errors
+// Log unexpected errors
 pool.on("error", (err) => {
   console.error("Unexpected error on idle client", err);
   process.exit(-1);

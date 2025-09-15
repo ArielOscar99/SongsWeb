@@ -1,13 +1,6 @@
-/**
- * songRepository.ts
- * 
- * Handles direct SQL queries for the `songs` table.
- * Contains methods to get, add, delete songs.
- */
-
 import pool from "../config/db";
 
-// TypeScript type for a Song
+// Song type
 export interface Song {
   id: number;
   name: string;
@@ -16,11 +9,11 @@ export interface Song {
 }
 
 /**
- * Get all songs from the DB
+ * Get all songs ordered by band name
  */
 export const getAllSongs = async (): Promise<Song[]> => {
   try {
-    const res = await pool.query("SELECT * FROM songs ORDER BY id ASC");
+    const res = await pool.query("SELECT * FROM songs ORDER BY LOWER(band) ASC");
     return res.rows;
   } catch (error) {
     console.error("Error fetching songs:", error);
@@ -29,13 +22,13 @@ export const getAllSongs = async (): Promise<Song[]> => {
 };
 
 /**
- * Add a new song
+ * Add one song
  */
 export const addSong = async (name: string, band: string, year: number): Promise<Song> => {
   try {
     const res = await pool.query(
       "INSERT INTO songs (name, band, year) VALUES ($1, $2, $3) RETURNING *",
-      [name, band, year]
+      [name.toLowerCase(), band.toLowerCase(), year]
     );
     return res.rows[0];
   } catch (error) {
@@ -53,5 +46,22 @@ export const deleteSong = async (id: number): Promise<void> => {
   } catch (error) {
     console.error("Error deleting song:", error);
     throw new Error("Could not delete song from database");
+  }
+};
+
+/**
+ * Search songs by name or band (partial match)
+ */
+export const searchSongs = async (query: string): Promise<Song[]> => {
+  try {
+    const lowerQuery = query.toLowerCase();
+    const res = await pool.query(
+      "SELECT * FROM songs WHERE LOWER(name) LIKE $1 OR LOWER(band) LIKE $1 ORDER BY LOWER(band) ASC",
+      [`%${lowerQuery}%`]
+    );
+    return res.rows;
+  } catch (error) {
+    console.error("Error searching songs:", error);
+    throw new Error("Could not search songs in database");
   }
 };
