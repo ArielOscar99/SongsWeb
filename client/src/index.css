@@ -1,13 +1,18 @@
+/* src/index.css - minimal baseline styles */
 body {
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  color: #111;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+input, button {
+  font-size: 14px;
+  padding: 6px 8px;
+}
+button {
+  cursor: pointer;
+}
+table th, table td {
+  border-bottom: 1px solid #eee;
 }
